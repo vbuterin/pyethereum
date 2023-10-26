@@ -1,30 +1,4 @@
-from pybitcointools import *
-import rlp
-import re
-from transactions import Transaction
-from trie import Trie
-import sys
 
-class Block():
-    def __init__(self,data=None):
-
-        if not data:
-            return
-
-        if re.match('^[0-9a-fA-F]*$',data):
-            data = data.decode('hex')
-
-        header,  transaction_list, self.uncles = rlp.decode(data)
-        [ self.number,
-          self.prevhash,
-          self.uncles_root,
-          self.coinbase,
-          state_root,
-          self.transactions_root,
-          self.difficulty,
-          self.timestamp,
-          self.nonce,
-          self.extra ] = header
         self.transactions = [Transaction(x) for x in transaction_list]
         self.state = Trie('statedb',state_root)
         self.reward = 0
